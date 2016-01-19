@@ -8,8 +8,6 @@
 
 namespace Jzyuchen\OAuthClient\Provider;
 
-
-use League\OAuth2\Client\Entity\User;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
 
@@ -70,7 +68,7 @@ class Weibo extends AbstractProvider {
      */
     public function userDetails($response, AccessToken $token)
     {
-        //dd($response);
+        dd($response);
         $user = new User;
         $user->uid = $response->id;
         $user->nickname = isset($response->name) ? $response->name : $response->domain;
@@ -83,6 +81,15 @@ class Weibo extends AbstractProvider {
             'profile' => $this->site . (isset($response->profile_url) ? $response->profile_url : $response->id),
             'site' => isset($response->url) && $response->url ? $response->url : null,
         ];
-        return $user;
+//        return $user;
+
+
+        return (new User)->setRaw($user)->map([
+            'id' => $this->openid, 'nickname' => $user['nickname'], 'name' => '',
+            'email' => '', 'avatar' => $user['figureurl_qq_2']? $user['figureurl_qq_2']:$user['figureurl_qq_1'],
+        ]);
+
+
+
     }
 }
