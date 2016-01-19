@@ -102,13 +102,17 @@ class QQ extends AbstractProvider  {
         $user = new User();
         $gender = (isset($response->gender)) ? $response->gender : null;
         $province = (isset($response->province)) ? $response->province : null;
-        $imageUrl = (isset($response->figureurl)) ? $response->figureurl : null;
+        $imageUrl = (isset($response->figureurl_2)) ? $response->figureurl_2 : null;
+        $city = (isset($response->city)) ? $response->city : null;
+        $year = (isset($response->year)) ? $response->year : null;
         $user->exchangeArray([
             'uid' => $this->openid,
             'nickname' => $response->nickname,
             'gender' => $gender,
             'province' => $province,
-            'imageUrl' => $imageUrl,
+            'avatar' => $imageUrl,
+            'city'=>$city,
+            'year'=>$year,
             'urls'  => null,
         ]);
         return $user;
