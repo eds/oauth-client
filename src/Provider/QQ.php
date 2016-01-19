@@ -2,7 +2,6 @@
 
 namespace Jzyuchen\OAuthClient\Provider;
 
-use League\OAuth2\Client\Entity\User;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
 
@@ -77,12 +76,12 @@ class QQ extends AbstractProvider  {
             'openid' => $this->openid
         ];
         $request = $this->httpClient->get($this->apiDomain . '/get_user_info?' . http_build_query($params));
-        $response = json_decode($request->send()->getBody());
+        $response = json_decode($request->send()->getBody(),true);
         // check response status
-        if ($response->ret < 0) {
+        if ($response["ret"] < 0) {
             // handle tencent's style exception.
-            $result['code'] = $response->ret;
-            $result['message'] = $response->msg;
+            $result['code'] = $response["ret"];
+            $result['message'] = $response["msg"];
             throw new \League\OAuth2\Client\Exception\IDPException($result);
         }
         return $this->userDetails($response, $token);
@@ -96,25 +95,12 @@ class QQ extends AbstractProvider  {
      * @param AccessToken $token
      * @return mixed
      */
-    public function userDetails($response, AccessToken $token)
+    public function userDetails($user, AccessToken $token)
     {
-        $user = new User();
-        $gender = (isset($response->gender)) ? $response->gender : null;
-        $province = (isset($response->province)) ? $response->province : null;
-        $imageUrl = (isset($response->figureurl_2)) ? $response->figureurl_2 : null;
-        $city = (isset($response->city)) ? $response->city : null;
-        $year = (isset($response->year)) ? $response->year : null;
-        $user->exchangeArray([
-            'uid' => $this->openid,
-            'nickname' => $response->nickname,
-            'gender' => $gender,
-            'province' => $province,
-            'avatar' => $imageUrl,
-            'city'=>$city,
-            'year'=>$year,
-            'urls'  => null,
+        return (new User)->setRaw($user)->map([
+            'id' => $this->openId, 'nickname' => $user['nickname'], 'name' => '',
+            'email' => '', 'avatar' => $user['figureurl_qq_2'] ?: $user['figureurl_qq_1'],
         ]);
-        return $user;
     }
 
     public function userUid($response, \League\OAuth2\Client\Token\AccessToken $token)
