@@ -43,6 +43,8 @@ abstract class AbstractUser implements ArrayAccess
      */
     public $avatar;
 
+    public $gender;
+
     /**
      * 获取唯一标识符。
      * @return string
@@ -86,6 +88,15 @@ abstract class AbstractUser implements ArrayAccess
     public function getAvatar()
     {
         return $this->avatar;
+    }
+
+    /**
+     * 获取性别。
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
     }
 
     /**

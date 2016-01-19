@@ -68,28 +68,34 @@ class Weibo extends AbstractProvider {
      */
     public function userDetails($response, AccessToken $token)
     {
-        dd($response);
-        $user = new User;
-        $user->uid = $response->id;
-        $user->nickname = isset($response->name) ? $response->name : $response->domain;
-        $user->name = isset($response->screen_name) ? $response->screen_name : null;
-        $user->location = isset($response->location) ? $response->location : null;
-        $user->imageUrl = isset($response->avatar_large) ? $response->avatar_large : null;
-        $user->description = isset($response->description) ? $response->description : null;
-        $user->gender = isset($response->gender) ? ($response->gender == 'm' ? '男': '女') : null;
-        $user->urls = [
-            'profile' => $this->site . (isset($response->profile_url) ? $response->profile_url : $response->id),
-            'site' => isset($response->url) && $response->url ? $response->url : null,
-        ];
+//        dd($response);
+//        $user = new User;
+//        $user->uid = $response->id;
+//        $user->nickname = isset($response->name) ? $response->name : $response->domain;
+//        $user->name = isset($response->screen_name) ? $response->screen_name : null;
+//        $user->location = isset($response->location) ? $response->location : null;
+//        $user->imageUrl = isset($response->avatar_large) ? $response->avatar_large : null;
+//        $user->description = isset($response->description) ? $response->description : null;
+//        $user->gender = isset($response->gender) ? ($response->gender == 'm' ? '男': '女') : null;
+//        $user->urls = [
+//            'profile' => $this->site . (isset($response->profile_url) ? $response->profile_url : $response->id),
+//            'site' => isset($response->url) && $response->url ? $response->url : null,
+//        ];
 //        return $user;
 
+        $user = $response;
+        if(is_object($response)){
+            $user = (array)$response;
+        }
 
         return (new User)->setRaw($user)->map([
-            'id' => $this->openid, 'nickname' => $user['nickname'], 'name' => '',
-            'email' => '', 'avatar' => $user['figureurl_qq_2']? $user['figureurl_qq_2']:$user['figureurl_qq_1'],
+            'id' => $response->id,
+            'nickname' => isset($response->name) ? $response->name : $response->domain,
+            'name' => isset($response->screen_name) ? $response->screen_name : '',
+            'email' => '',
+            'avatar' => isset($response->avatar_large) ? $response->avatar_large : '',
+            'gender' => isset($response->gender) ? ($response->gender == 'm' ? '1': '0'):''
         ]);
-
-
 
     }
 }

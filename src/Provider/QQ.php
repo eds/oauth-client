@@ -98,8 +98,12 @@ class QQ extends AbstractProvider  {
     public function userDetails($user, AccessToken $token)
     {
         return (new User)->setRaw($user)->map([
-            'id' => $this->openid, 'nickname' => $user['nickname'], 'name' => '',
-            'email' => '', 'avatar' => $user['figureurl_qq_2']? $user['figureurl_qq_2']:$user['figureurl_qq_1'],
+            'id' => $this->openid,
+            'nickname' => $user['nickname'],
+            'name' => '',
+            'email' => '',
+            'avatar' => $user['figureurl_qq_2']? $user['figureurl_qq_2']:$user['figureurl_qq_1'],
+            'gender' => $user['gender'] == '男'?'1':'0'
         ]);
     }
 
