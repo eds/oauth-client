@@ -98,7 +98,6 @@ class QQ extends AbstractProvider  {
      */
     public function userDetails($response, AccessToken $token)
     {
-        dd($response);
         $user = new User();
         $gender = (isset($response->gender)) ? $response->gender : null;
         $province = (isset($response->province)) ? $response->province : null;
