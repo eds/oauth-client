@@ -13,4 +13,23 @@ use Jzyuchen\OAuthClient\AbstractUser;
 
 class User extends AbstractUser {
 
+    /**
+     * access token
+     *
+     * @var object
+     */
+    public $token;
+
+    /**
+     * 设置 access token。
+     *
+     * @param object $token
+     * @return $this
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+        return $this;
+    }
+
 }

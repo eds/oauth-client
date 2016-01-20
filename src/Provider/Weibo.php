@@ -88,7 +88,7 @@ class Weibo extends AbstractProvider {
             $user = (array)$response;
         }
 
-        return (new User)->setRaw($user)->map([
+        return (new User)->setRaw($user)->setToken($token)->map([
             'id' => $response->id,
             'nickname' => isset($response->name) ? $response->name : $response->domain,
             'name' => isset($response->screen_name) ? $response->screen_name : '',

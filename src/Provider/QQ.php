@@ -97,7 +97,7 @@ class QQ extends AbstractProvider  {
      */
     public function userDetails($user, AccessToken $token)
     {
-        return (new User)->setRaw($user)->map([
+        return (new User)->setRaw($user)->setToken($token)->map([
             'id' => $this->openid,
             'nickname' => $user['nickname'],
             'name' => '',
