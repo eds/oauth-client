@@ -46,6 +46,13 @@ abstract class AbstractUser implements ArrayAccess
     public $gender;
 
     /**
+     * access token
+     *
+     * @var object
+     */
+    public $token;
+
+    /**
      * 获取唯一标识符。
      * @return string
      */
@@ -108,6 +115,18 @@ abstract class AbstractUser implements ArrayAccess
     public function setRaw(array $user)
     {
         $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * 设置 access token。
+     *
+     * @param object $token
+     * @return $this
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
         return $this;
     }
 
