@@ -107,9 +107,7 @@ class Weixin extends AbstractProvider {
         // TODO: Implement userDetails() method.
 
         $response = $this->fetchUserDetails($token);
-
-        var_dump($response);
-
+        
         // pickup openid
         $first_open_brace_pos = strpos($response, '{');
         $last_close_brace_pos = strrpos($response, '}');
@@ -119,17 +117,18 @@ class Weixin extends AbstractProvider {
             $last_close_brace_pos - $first_open_brace_pos + 1
         ));
 
-        dd($response);
-
         $this->openid = $response->openid;
         // fetch QQ user profile
         $params = [
             'access_token' => $token->accessToken,
-            'oauth_consumer_key' => $this->clientId,
             'openid' => $this->openid
         ];
         $request = $this->httpClient->get($this->apiDomain . '/sns/userinfo?' . http_build_query($params));
         $response = json_decode($request->send()->getBody(),true);
+
+
+        dd($response);
+
         // check response status
         if ($response["ret"] < 0) {
             // handle tencent's style exception.
