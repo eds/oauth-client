@@ -15,17 +15,14 @@ use League\OAuth2\Client\Token\AccessToken;
 class Weixin extends AbstractProvider {
 
 
-    /**
-     * 授权作用域
-     *
-     * @var array
-     */
-    protected $scopes = ['snsapi_login'];
-
     public function __construct($options=[]){
+
         if (!array_has($options, 'redirectUri')){
             $options['redirectUri'] = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'];
         }
+
+        $options['$scopes'] = ['snsapi_login'];
+
         parent::__construct($options);
     }
 
