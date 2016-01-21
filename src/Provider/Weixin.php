@@ -15,7 +15,7 @@ use League\OAuth2\Client\Token\AccessToken;
 class Weixin extends AbstractProvider {
 
 
-    protected $apiDomain = 'https://open.weixin.qq.com';
+    protected $apiDomain = 'https://api.weixin.qq.com';
     protected $openid = ''; // only stupid tencent offers this..
 
 
@@ -107,7 +107,7 @@ class Weixin extends AbstractProvider {
         // TODO: Implement userDetails() method.
 
         $response = $this->fetchUserDetails($token);
-        
+
         // pickup openid
         $first_open_brace_pos = strpos($response, '{');
         $last_close_brace_pos = strrpos($response, '}');
