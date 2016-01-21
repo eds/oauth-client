@@ -86,7 +86,7 @@ class Weixin extends AbstractProvider {
     {
         // TODO: Implement urlUserDetails() method.
 
-        return 'https://api.weixin.qq.com/sns/oauth2/refresh_token';
+        return 'https://api.weixin.qq.com//sns/userinfo';
     }
 
     /**
