@@ -126,18 +126,35 @@ class Weixin extends AbstractProvider {
         $request = $this->httpClient->get($this->apiDomain . '/sns/userinfo?' . http_build_query($params));
         $response = json_decode($request->send()->getBody(),true);
 
-
-        dd($response);
-
         // check response status
-        if ($response["ret"] < 0) {
+        if ($response["errcode"]) {
             // handle tencent's style exception.
-            $result['code'] = $response["ret"];
-            $result['message'] = $response["msg"];
+            $result['code'] = $response["errcode"];
+            $result['message'] = $response["errmsg"];
             throw new \League\OAuth2\Client\Exception\IDPException($result);
         }
-        return $this->userDetails($response, $token);
+
+        return (new User)->setRaw($response)->setToken($token)->map([
+            'id' => $this->openid,
+            'nickname' => $response['nickname'],
+            'name' => '',
+            'email' => '',
+            'avatar' => $response['headimgurl'],
+            'gender' => $response['sex']
+        ]);
+
+    }
 
 
+    public function userDetails($user, AccessToken $token)
+    {
+        return (new User)->setRaw($user)->setToken($token)->map([
+            'id' => $this->openid,
+            'nickname' => $user['nickname'],
+            'name' => '',
+            'email' => '',
+            'avatar' => $user['figureurl_qq_2']? $user['figureurl_qq_2']:$user['figureurl_qq_1'],
+            'gender' => $user['gender'] == '男'?'1':'0'
+        ]);
     }
 }
