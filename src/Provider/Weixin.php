@@ -108,8 +108,6 @@ class Weixin extends AbstractProvider {
 
         $response = $this->fetchUserDetails($token);
 
-        dd($response);
-
         // pickup openid
         $first_open_brace_pos = strpos($response, '{');
         $last_close_brace_pos = strrpos($response, '}');
@@ -118,6 +116,8 @@ class Weixin extends AbstractProvider {
             $first_open_brace_pos,
             $last_close_brace_pos - $first_open_brace_pos + 1
         ));
+
+        dd($response);
 
         $this->openid = $response->openid;
         // fetch QQ user profile
