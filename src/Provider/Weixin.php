@@ -14,6 +14,11 @@ use League\OAuth2\Client\Token\AccessToken;
 
 class Weixin extends AbstractProvider {
 
+
+    protected $apiDomain = 'https://open.weixin.qq.com';
+    protected $openid = ''; // only stupid tencent offers this..
+
+
     /**
      * 授权作用域
      *
@@ -86,7 +91,7 @@ class Weixin extends AbstractProvider {
     {
         // TODO: Implement urlUserDetails() method.
 
-        return 'https://api.weixin.qq.com//sns/userinfo';
+        return 'https://api.weixin.qq.com/sns/oauth2/refresh_token';
     }
 
     /**
@@ -100,5 +105,38 @@ class Weixin extends AbstractProvider {
     public function userDetails($response, AccessToken $token)
     {
         // TODO: Implement userDetails() method.
+
+        $response = $this->fetchUserDetails($token);
+
+        dd($response);
+
+        // pickup openid
+        $first_open_brace_pos = strpos($response, '{');
+        $last_close_brace_pos = strrpos($response, '}');
+        $response = json_decode(substr(
+            $response,
+            $first_open_brace_pos,
+            $last_close_brace_pos - $first_open_brace_pos + 1
+        ));
+
+        $this->openid = $response->openid;
+        // fetch QQ user profile
+        $params = [
+            'access_token' => $token->accessToken,
+            'oauth_consumer_key' => $this->clientId,
+            'openid' => $this->openid
+        ];
+        $request = $this->httpClient->get($this->apiDomain . '/sns/userinfo?' . http_build_query($params));
+        $response = json_decode($request->send()->getBody(),true);
+        // check response status
+        if ($response["ret"] < 0) {
+            // handle tencent's style exception.
+            $result['code'] = $response["ret"];
+            $result['message'] = $response["msg"];
+            throw new \League\OAuth2\Client\Exception\IDPException($result);
+        }
+        return $this->userDetails($response, $token);
+
+
     }
 }
