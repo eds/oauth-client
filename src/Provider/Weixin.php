@@ -53,6 +53,8 @@ class Weixin extends AbstractProvider {
             'response_type' => isset($options['response_type']) ? $options['response_type'] : 'code',
         ];
 
+        dd($params);
+
         return $this->urlAuthorize().'?'.$this->httpBuildQuery($params, '', '&');
     }
 
