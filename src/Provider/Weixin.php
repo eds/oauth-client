@@ -91,7 +91,7 @@ class Weixin extends AbstractProvider {
     {
         // TODO: Implement urlUserDetails() method.
 
-        return 'https://api.weixin.qq.com/sns/oauth2/refresh_token';
+        return 'https://api.weixin.qq.com/sns/oauth2/refresh_token?appid='.$this->clientId.'&grant_type=refresh_token&refresh_token='.$token->refreshToken;
     }
 
     /**
@@ -107,6 +107,8 @@ class Weixin extends AbstractProvider {
         // TODO: Implement userDetails() method.
 
         $response = $this->fetchUserDetails($token);
+
+        var_dump($response);
 
         // pickup openid
         $first_open_brace_pos = strpos($response, '{');
