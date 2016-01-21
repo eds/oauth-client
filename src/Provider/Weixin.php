@@ -38,6 +38,22 @@ class Weixin extends AbstractProvider {
         return 'https://open.weixin.qq.com/connect/qrconnect';
     }
 
+    public function getAuthorizationUrl($options = [])
+    {
+        $this->state = isset($options['state']) ? $options['state'] : md5(uniqid(rand(), true));
+
+        $params = [
+            'app_id' => $this->clientId,
+            'redirect_uri' => $this->redirectUri,
+            'state' => $this->state,
+            'scope' => is_array($this->scopes) ? implode($this->scopeSeparator, $this->scopes) : $this->scopes,
+            'response_type' => isset($options['response_type']) ? $options['response_type'] : 'code',
+            'approval_prompt' => isset($options['approval_prompt']) ? $options['approval_prompt'] : 'auto',
+        ];
+
+        return $this->urlAuthorize().'?'.$this->httpBuildQuery($params, '', '&');
+    }
+
     /**
      * Get the URL that this provider users to request an access token.
      *
