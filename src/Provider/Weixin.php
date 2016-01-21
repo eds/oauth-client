@@ -120,7 +120,7 @@ class Weixin extends AbstractProvider {
         $this->openid = $response->openid;
         // fetch QQ user profile
         $params = [
-            'access_token' => '23232323', //$token->accessToken,
+            'access_token' => $token->accessToken,
             'openid' => $this->openid
         ];
         $request = $this->httpClient->get($this->apiDomain . '/sns/userinfo?' . http_build_query($params));
@@ -144,5 +144,5 @@ class Weixin extends AbstractProvider {
         ]);
 
     }
-    
+
 }
