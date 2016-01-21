@@ -14,6 +14,21 @@ use League\OAuth2\Client\Token\AccessToken;
 
 class Weixin extends AbstractProvider {
 
+
+    /**
+     * 授权作用域
+     *
+     * @var array
+     */
+    protected $scopes = ['snsapi_login'];
+
+    public function __construct($options=[]){
+        if (!array_has($options, 'redirectUri')){
+            $options['redirectUri'] = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING'];
+        }
+        parent::__construct($options);
+    }
+
     /**
      * Get the URL that this provider uses to begin authorization.
      *
@@ -22,6 +37,23 @@ class Weixin extends AbstractProvider {
     public function urlAuthorize()
     {
         // TODO: Implement urlAuthorize() method.
+
+        return 'https://open.weixin.qq.com/connect/qrconnect';
+    }
+
+    public function getAuthorizationUrl($options = [])
+    {
+        $this->state = isset($options['state']) ? $options['state'] : md5(uniqid(rand(), true));
+
+        $params = [
+            'app_id' => $this->clientId,
+            'redirect_uri' => $this->redirectUri,
+            'state' => $this->state,
+            'scope' => is_array($this->scopes) ? implode($this->scopeSeparator, $this->scopes) : $this->scopes,
+            'response_type' => isset($options['response_type']) ? $options['response_type'] : 'code',
+        ];
+
+        return $this->urlAuthorize().'?'.$this->httpBuildQuery($params, '', '&');
     }
 
     /**
@@ -32,6 +64,8 @@ class Weixin extends AbstractProvider {
     public function urlAccessToken()
     {
         // TODO: Implement urlAccessToken() method.
+
+        return 'https://api.weixin.qq.com/sns/oauth2/access_token';
     }
 
     /**
@@ -48,6 +82,8 @@ class Weixin extends AbstractProvider {
     public function urlUserDetails(AccessToken $token)
     {
         // TODO: Implement urlUserDetails() method.
+
+        return 'https://api.weixin.qq.com/sns/oauth2/refresh_token';
     }
 
     /**
