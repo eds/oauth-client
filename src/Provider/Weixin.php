@@ -127,7 +127,7 @@ class Weixin extends AbstractProvider {
         $response = json_decode($request->send()->getBody(),true);
 
         // check response status
-        if ($response["errcode"]) {
+        if (isset($response["errcode"])) {
             // handle tencent's style exception.
             $result['code'] = $response["errcode"];
             $result['message'] = $response["errmsg"];
